@@ -1,11 +1,20 @@
-import { Container } from './Layout.styled';
+import { Suspense } from 'react';
+import { AppBar } from 'components/AppBar/AppBar';
 
-export const Layout = ({ children }) => {
+import { Outlet } from 'react-router-dom';
+import { GlobalStyle } from 'components/GlobalStyle';
+import { MainWrapper } from './Layout.styled';
+
+export const Layout = () => {
   return (
-    <Container>
-      <header>header</header>
-      <main>{children}</main>
-      <footer>footer</footer>
-    </Container>
+    <>
+      <AppBar />
+      <MainWrapper>
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
+      </MainWrapper>
+      <GlobalStyle />
+    </>
   );
 };

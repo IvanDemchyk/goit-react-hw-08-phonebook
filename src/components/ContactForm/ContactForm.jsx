@@ -1,12 +1,12 @@
 import { Formik } from 'formik';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/operations';
-import { filterList } from 'redux/filterSlice';
-import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contacts/operations';
+import { filterList } from 'redux/contacts/filterSlice';
+import { getContacts } from 'redux/contacts/selectors';
 import { Form, FormLabel, Field, SubmitBtn } from './ContactForm.styled';
 
-const initialFormValues = { name: '', phone: '' };
+const initialFormValues = { name: '', number: '' };
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
@@ -41,10 +41,10 @@ export const ContactForm = () => {
           />
         </FormLabel>
         <FormLabel htmlFor="number">
-          Number
+          Phone number
           <Field
             type="tel"
-            name="phone"
+            name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required

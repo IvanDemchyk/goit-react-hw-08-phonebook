@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const MainWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-content: center;
   align-items: center;
+`;
+
+export const Container = styled.div`
   padding: 20px;
   background-color: rgba(26, 165, 21, 0.648);
   max-width: 380px;

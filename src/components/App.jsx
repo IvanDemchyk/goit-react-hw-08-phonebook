@@ -1,34 +1,59 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { selectError, selectIsLoading } from 'redux/selectors';
-import { fetchContacts } from 'redux/operations';
+import { lazy, useEffect } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { Layout } from './Layout/Layout';
+import { PublicRoute } from './PublicRoute';
+import { PrivateRoute } from './PrivateRoute';
 
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { Filter } from './Filter/Filter';
+import { fetchCurrentUser } from 'redux/auth/operations';
+import { useAuth } from 'hooks';
+import { useDispatch } from 'react-redux';
 
-import { Container, MainTitle, ListTitle } from './Layout/Layout.styled';
-import { GlobalStyle } from './GlobalStyle';
+const HomePage = lazy(() => import('../pages/Home'));
+const LoginPage = lazy(() => import('../pages/Login'));
+const RegisterPage = lazy(() => import('../pages/Register'));
+const ContactsPage = lazy(() => import('../pages/Contacts'));
 
 export const App = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+  const { isRefreshing } = useAuth();
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(fetchCurrentUser());
   }, [dispatch]);
 
-  return (
-    <Container>
-      <MainTitle>Phonebook</MainTitle>
-      <ContactForm />
-      <ListTitle>Contacts</ListTitle>
-      <Filter />
-      {isLoading && !error && <b>Request in progress...</b>}
-      <ContactList />
-      <GlobalStyle />
-    </Container>
+  return isRefreshing ? (
+    <b>Refreshing user</b>
+  ) : (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Navigate to="home"></Navigate>} />
+        <Route path="home" element={<HomePage />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/contacts"
+          element={
+            <PrivateRoute>
+              <ContactsPage />
+            </PrivateRoute>
+          }
+        />
+      </Route>
+    </Routes>
   );
 };
 
